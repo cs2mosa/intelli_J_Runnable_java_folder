@@ -21,7 +21,6 @@ public class PharmacistProfileView extends VBox {
         this.setSpacing(20);
         this.setPadding(new Insets(20));
         this.setAlignment(Pos.CENTER);
-
         // Retrieve current pharmacist
         this.pharmacist = (Pharmacist) User_Service.getInstance().GetByUsername(pharmacistUsername);
 
@@ -77,12 +76,12 @@ public class PharmacistProfileView extends VBox {
         Button receivedOrdersButton = new Button("Received Orders");
         receivedOrdersButton.setFont(new Font("Arial", 16));
         receivedOrdersButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
-        receivedOrdersButton.setOnAction(event -> mainApp.loadPage("ReceivedOrders" , null));
+        receivedOrdersButton.setOnAction(event -> mainApp.loadPage("ReceivedOrders" , pharmacistUsername));
 
         Button inventoryButton = new Button("Inventory");
         inventoryButton.setFont(new Font("Arial", 16));
         inventoryButton.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white;");
-        inventoryButton.setOnAction(event -> mainApp.loadPage("Inventory" , null));
+        inventoryButton.setOnAction(event -> mainApp.loadPage("Inventory" , pharmacistUsername));
 
         Button editProfileButton = new Button("Edit Profile");
         editProfileButton.setFont(new Font("Arial", 16));

@@ -26,7 +26,7 @@ abstract interface InventoryServiceInterface {
 
     /**
      * Updates the details of an existing item in the inventory.
-     * @param item The item with updated details.
+     * @param itemName The item with updated details.
      * @param value The new price of the item.(Positive only)
      * @return 0 if the item is updated successfully, -1 if the item does not exist.
      */
@@ -92,22 +92,34 @@ public class Inventory_service implements InventoryServiceInterface{
     //works fine
     @Override
     public int AddNewItem(Item item){
-        if(/*Admin.authorizeItem(item) &&*/ Items_Repository.GetInstance().GetItemByName(item.getMedicName()) == null){
-            Items_Repository.GetInstance().AddNewItem(item);
-            return 0;
+        try{
+            if(/*Admin.authorizeItem(item) &&*/ Items_Repository.GetInstance().GetItemByName(item.getMedicName()) == null){
+                Items_Repository.GetInstance().AddNewItem(item);
+                return 0;
+            }
+            return -1; // Item already exists or not authorized.
+        }catch (Exception e){
+            System.out.println("error adding item: " + e.getMessage());
+            return -1;
         }
-        return -1; // Item already exists or not authorized.
+
     }
     //works fine
     @Override
     public int RemoveItemByName(String Itemname){
-        if(Items_Repository.GetInstance().GetItemByName(Itemname) != null){
-            Items_Repository.GetInstance().RemoveItemByName(Itemname);
-            //other functionalites to be added.
-            return 0;
-        }else{
-            return -1; // Item not found.
+        try{
+            if(Items_Repository.GetInstance().GetItemByName(Itemname) != null){
+                Items_Repository.GetInstance().RemoveItemByName(Itemname);
+                //other functionalites to be added.
+                return 0;
+            }else{
+                return -1; // Item not found.
+            }
+        } catch (Exception e) {
+            System.out.println("error removing item: " + e.getMessage());
+            return -1;
         }
+
     }
     //works fine 
     @Override
