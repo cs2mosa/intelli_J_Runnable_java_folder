@@ -22,55 +22,6 @@ public class OrderView extends VBox {
 
     public OrderView(MainApp mainApp , String patientName) {
 
-
-
-
-        /*------------------------------------------------------------------*/
-/*
-        Item item1 = new Item.builder()
-                .setMedicName("Medic1")
-                .setPrice(10.0)
-                .setExpireDate("31/12/2025")
-                .setQuantity(10)
-                .setUsage("Take 1 tablet every 6 hours")
-                .setSideEffects(new HashSet<>())
-                .setHealingEffects(new HashSet<>())
-                .setCategory("cats")
-                .build();
-
-        Item item2 = new Item.builder()
-                .setMedicName("Medic2")
-                .setPrice(10.0)
-                .setExpireDate("31/12/2024")
-                .setQuantity(10)
-                .setUsage("Take 1 tablet every 12 hours")
-                .setSideEffects(new HashSet<>())
-                .setHealingEffects(new HashSet<>())
-                .setCategory("cats")
-                .build();
-
-        Item item3 = new Item.builder()
-                .setMedicName("Medic3")
-                .setPrice(10.0)
-                .setExpireDate("31/12/2025")
-                .setQuantity(10)
-                .setUsage("Take 1 tablet every 6 hours")
-                .setSideEffects(new HashSet<>())
-                .setHealingEffects(new HashSet<>())
-                .setCategory("cats")
-                .build();
-
-
-        Inventory_service.getInstance().AddNewItem(item1);
-        Inventory_service.getInstance().AddNewItem(item2);
-        Inventory_service.getInstance().AddNewItem(item3);
-
-*/
-
-        /*------------------------------------------------------------------*/
-
-
-
         this.mainApp = mainApp;
         this.setSpacing(20);
         this.setPadding(new Insets(20));
@@ -86,15 +37,19 @@ public class OrderView extends VBox {
         searchLabel.setFont(new Font("Arial", 16));
         searchLabel.setTextFill(Color.DARKRED);
 
+        ListView<Item> itemsListView = new ListView<>();
+        itemsListView.setPrefHeight(200);
+
         TextField searchField = new TextField();
-        searchField.setPromptText("Enter item name or category");
+        searchField.setPromptText("Enter item name");
 
         Button searchButton = new Button("Search");
         searchButton.setOnAction(event -> {
             String query = searchField.getText();
             if (!query.isEmpty()) {
                 List<Item> searchResults = searchItems(query);
-                updateItemsListView(searchResults);
+                if(searchResults.isEmpty()) showAlert("Error", "No items found.");
+                updateItemsListView(itemsListView,searchResults);
             }
         });
 
@@ -105,9 +60,6 @@ public class OrderView extends VBox {
         Label itemsLabel = new Label("Available Items");
         itemsLabel.setFont(new Font("Arial", 16));
         itemsLabel.setTextFill(Color.DARKRED);
-
-        ListView<Item> itemsListView = new ListView<>();
-        itemsListView.setPrefHeight(200);
 
         // Fetch available items
         List<Item> availableItems = Inventory_service.getInstance().GetAllItems();
@@ -143,7 +95,7 @@ public class OrderView extends VBox {
                                 quantity += orderItems.get(selectedItem);
                             orderItems.put(selectedItem, quantity);
                             showAlert("Success", "Item added to order.");
-
+                            updateItemsListView(itemsListView,availableItems);
                         }else if(quantity <= selected.getQuantity()) {
                             showAlert("Error", "no sufficient quantity");
                         } else {
@@ -188,25 +140,22 @@ public class OrderView extends VBox {
     }
 
     private List<Item> searchItems(String query) {
-        // Implement searching items by name or category using InventoryService
-        List<Item> searchResults = new ArrayList<>();
-        Item itemByName = Inventory_service.getInstance().GetItemByName(query);
-        //can be changed, testing functionalities now.
-        if(itemByName == null || Inventory_service.getInstance().GetItemsByCategory(query).isEmpty() ||Inventory_service.getInstance().GetItemsByCategory(query) == null)
+        Inventory_service inventoryService = Inventory_service.getInstance();
+        Item itemByName = inventoryService.GetItemByName(query);
+        if ((itemByName == null)) {
             showAlert("Error", "No items found.");
-        if (itemByName != null) {
-            searchResults.add(itemByName);
-        } else {
-            searchResults.addAll(Inventory_service.getInstance().GetItemsByCategory(query));
+            return new ArrayList<>();
         }
+        List<Item> searchResults = new ArrayList<>();
+        searchResults.add(itemByName);
         return searchResults;
     }
 
-    private void updateItemsListView(List<Item> items) {
+    private void updateItemsListView(ListView<Item> itemsListView,List<Item> items) {
         ObservableList<Item> itemsObservableList = FXCollections.observableArrayList(items);
-        @SuppressWarnings("unchecked")//suppressed that warning because it doesn't matter for now.
-        ListView<Item> itemsListView = (ListView<Item>) this.lookup("#itemsListView");
-        if (itemsListView != null) {
+        //@SuppressWarnings("unchecked")//suppressed that warning because it doesn't matter for now.
+        //ListView<Item> itemsListView = (ListView<Item>) this.lookup("#itemsListView");
+        if (!itemsObservableList.isEmpty()) {
             itemsListView.setItems(itemsObservableList);
         } else {
             // Handle the case where the ListView was not found
