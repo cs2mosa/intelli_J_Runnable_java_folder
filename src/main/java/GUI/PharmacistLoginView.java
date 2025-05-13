@@ -59,6 +59,7 @@ public class PharmacistLoginView extends VBox {
             Pharmacist pharmacist = (Pharmacist) User_Service.getInstance().GetByUsername(username);
             /*pharmacist != null && pharmacist.getPassword().equals(password) && pharmacist.getPassword() != null*/
             if (User_Service.getInstance().AuthenticateUser(pharmacist)) {
+                showAlert("Success", "Login successful!");
                 mainApp.loadPage("PharmacistProfile" , username);
             } else {
                 showAlert("Error", "Invalid username or password");

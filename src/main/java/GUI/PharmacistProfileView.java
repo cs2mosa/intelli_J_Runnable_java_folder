@@ -16,14 +16,14 @@ public class PharmacistProfileView extends VBox {
     private MainApp mainApp;
     private Pharmacist pharmacist;
 
-    public PharmacistProfileView(MainApp mainApp) {
+    public PharmacistProfileView(MainApp mainApp, String pharmacistUsername) {
         this.mainApp = mainApp;
         this.setSpacing(20);
         this.setPadding(new Insets(20));
         this.setAlignment(Pos.CENTER);
 
         // Retrieve current pharmacist
-        this.pharmacist = (Pharmacist) User_Service.getInstance().GetByUsername(getCurrentPharmacistUsername());
+        this.pharmacist = (Pharmacist) User_Service.getInstance().GetByUsername(pharmacistUsername);
 
         // Title
         Label titleLabel = new Label("Pharmacist Profile");

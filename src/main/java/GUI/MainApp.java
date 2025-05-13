@@ -62,7 +62,7 @@ public class MainApp extends Application {
                 rootLayout.setCenter(new PaymentView(this, PatientId, PatientName));
                 break;
             case "PharmacistProfile":
-                rootLayout.setCenter(new PharmacistProfileView(this));
+                rootLayout.setCenter(new PharmacistProfileView(this,PatientName));
                 break;
             case "ReceivedOrders":
                 rootLayout.setCenter(new ReceivedOrdersView(this));

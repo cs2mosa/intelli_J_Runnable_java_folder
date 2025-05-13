@@ -1,5 +1,7 @@
 package Service_Interfaces;
 
+import Class_model.Casher;
+import Class_model.Pharmacist;
 import Class_model.User;
 
 /**
@@ -77,8 +79,8 @@ public class User_Service implements UserServiceInterface {
     public int AddUser(User user) {
         // Implementation for adding a user
         try {
-            //if (user == null) throw new IllegalArgumentException("User cannot be null");
-            //if(user.getUsername() == null || user.getPassword() == null) throw new IllegalArgumentException("Username or password cannot be null");
+            if (user == null) throw new IllegalArgumentException("User cannot be null");
+            if(user.getUsername() == null || user.getPassword() == null) throw new IllegalArgumentException("Username or password cannot be null");
             return User_Repository.GetInstance().Add(user);
         } catch (Exception e) {
             // handle exception
@@ -183,11 +185,7 @@ public class User_Service implements UserServiceInterface {
             if (user == null || user.getUsername() == null || user.getPassword() == null) throw new IllegalArgumentException("Username or password cannot be null");
             if (user.getUsername().isEmpty() || user.getPassword().isEmpty()) throw new IllegalArgumentException("Username or password cannot be empty");
             if(temp == null) throw new IllegalArgumentException("User not found");
-            if(!temp.getPassword().equals(user.getPassword())){
-                return false;
-            }else{
-                return true;
-            }
+            return (!(temp instanceof Pharmacist) || temp.getPassword().equals(((Pharmacist) user).getPassword())) && (!(temp instanceof Casher) || temp.getUsername().equals(((Casher) user).getUsername()));
         } catch (Exception e) {
             // handle exception
             System.out.println("Error authenticating user: " + e.getMessage());

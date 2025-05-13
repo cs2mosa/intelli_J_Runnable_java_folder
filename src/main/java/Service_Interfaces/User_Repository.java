@@ -3,6 +3,7 @@ package Service_Interfaces;
 import java.util.HashSet;
 import java.util.Set;
 
+import Class_model.Casher;
 import Class_model.Pharmacist;
 import Class_model.User;
 
@@ -80,6 +81,8 @@ class User_Repository implements UserRepository {
         if(!USERS.contains(user) && GetByUsername(user.getUsername()) == null) {
             if(user instanceof Pharmacist){
                 USERS.add((Pharmacist)user);
+            }else if(user instanceof Casher){
+                USERS.add((Casher)user);
             }
             return user.getID();
         }else{

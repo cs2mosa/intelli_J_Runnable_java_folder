@@ -139,9 +139,11 @@ public class OrderView extends VBox {
                     try {
                         int quantity = Integer.parseInt(response);
                         if (quantity > 0) {
-                            if(orderItems.containsKey(selectedItem)) quantity += orderItems.get(selectedItem);
+                            if(orderItems.containsKey(selectedItem))
+                                quantity += orderItems.get(selectedItem);
                             orderItems.put(selectedItem, quantity);
                             showAlert("Success", "Item added to order.");
+
                         }else if(quantity <= selected.getQuantity()) {
                             showAlert("Error", "no sufficient quantity");
                         } else {

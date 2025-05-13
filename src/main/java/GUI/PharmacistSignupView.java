@@ -80,7 +80,7 @@ public class PharmacistSignupView extends VBox {
             String email = emailField.getText();
             String phone = phoneField.getText();
             String code = codeField.getText();
-                                        //validation code
+            //validation code
             if (code.equals("PHARMACY123")) {
                 Pharmacist pharmacist = new Pharmacist();
                 pharmacist.setUsername(username);
@@ -95,8 +95,8 @@ public class PharmacistSignupView extends VBox {
                 // Additional Pharmacist-specific fields can be set here
 
                 if (User_Service.getInstance().AddUser(pharmacist) > 0) {
-                    showAlert("Success", "Sign up successful. Please log in.");
-                    mainApp.loadPage("PharmacistLogin" , null);
+                    showAlert("Success", "Sign up successful.");
+                    mainApp.loadPage("PharmacistProfile" ,username);
                 } else {
                     showAlert("Error", "Sign up failed. Please try again.");
                 }

@@ -329,11 +329,10 @@ public class Patient_Service implements PatientServiceInterface {
             if (items == null || items.isEmpty())
                 throw new IllegalArgumentException("no items has been found, failed to place the order");
             Iterator<Map.Entry<String, Integer>> it = items.entrySet().iterator();
-
+            double totalprice = 0.0;
             while (it.hasNext()) {
                 Map.Entry<String, Integer> temp = it.next();
                 Item tempitem = Inventory_service.getInstance().GetItemByName(temp.getKey());
-                System.out.println();
                 if (tempitem == null)
                     throw new IllegalArgumentException("item "+ temp.getKey() +" has not been found, failed to place the order");
                 if (tempitem.getQuantity() < temp.getValue())
@@ -343,11 +342,13 @@ public class Patient_Service implements PatientServiceInterface {
                 
                 tempitems.add(tempitem);
                 Inventory_service.getInstance().updateStock(tempitem.getMedicName(), tempitem.getQuantity() - temp.getValue());
+                totalprice += tempitem.getPrice() * temp.getValue();
             }
             Order order = new Order.builder()
                     .setOrderId(new Random().nextInt(50000))
                     .setStatus("Pending")
                     .setOrderItems(tempitems)
+                    .setTotalPrice(totalprice)
                     .build();
 
             if (Order_Repository.getInstance().AddOrder(PatientId, order) > 0 && Prescription_Service.getInstance().IssuePrescription(pharmacist, PatientId, order.getOrderId()) > 0) {

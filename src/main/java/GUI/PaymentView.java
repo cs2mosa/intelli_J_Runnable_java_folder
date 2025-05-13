@@ -106,7 +106,13 @@ public class PaymentView extends VBox {
     private Order fetchCurrentOrder(String patientName) {
         // Implement fetching the current order using OrderService
         List<Order> orders = Order_Service.getInstance().GetByCustomer(patientName);
-        return orders.stream().filter(order -> "Pending".equals(order.getStatus())).findFirst().orElse(null);
+        //need sorting orders first
+        for(Order order : orders){
+            if(order.getStatus().equals("Pending")){
+                return order;
+            }
+        }
+        return null;
     }
 
     private double fetchPatientBalance(String patientName) {
