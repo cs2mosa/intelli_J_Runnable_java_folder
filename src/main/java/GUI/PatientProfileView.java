@@ -32,10 +32,26 @@ public class PatientProfileView extends VBox {
         this.setSpacing(20);
         this.setPadding(new Insets(20));
 
-        // Title
+        // Set background image
+        try {
+            Image backgroundImage = new Image(getClass().getResourceAsStream("/images/patient_background.jpg"));
+            BackgroundImage background = new BackgroundImage(
+                    backgroundImage,
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundPosition.CENTER,
+                    new BackgroundSize(100, 100, true, true, true, true)
+            );
+            this.setBackground(new Background(background));
+        } catch (Exception e) {
+            System.err.println("Could not load background image: " + e.getMessage());
+        }
+
+        // Title with enhanced visibility against background
         Label titleLabel = new Label("Patient Profile");
         titleLabel.setFont(new Font("Arial", 24));
-        titleLabel.setTextFill(Color.DARKBLUE);
+        titleLabel.setTextFill(Color.WHITE);
+        titleLabel.setStyle("-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);");
         titleLabel.setAlignment(Pos.CENTER);
 
         Button placeOrderButton = new Button("Place Order\n(Click to place a new order)");
@@ -51,28 +67,37 @@ public class PatientProfileView extends VBox {
         placeOrderBox.setAlignment(Pos.CENTER);
         placeOrderBox.setPadding(new Insets(20));
 
-        // Patient Details Section
+        // Patient Details Section with enhanced visibility against background
         GridPane detailsGrid = new GridPane();
         detailsGrid.setHgap(10);
         detailsGrid.setVgap(10);
         detailsGrid.setAlignment(Pos.CENTER);
+        detailsGrid.setStyle("-fx-background-color: rgba(255, 255, 255, 0.3); -fx-padding: 10px; -fx-background-radius: 5px;");
 
         //current patient.
         Patient currentpatient = Patient_Service.getInstance().GetPatient(patientName);
 
-
+        // Create labels with better visibility against the background
         Label nameLabel = new Label("Name:");
+        nameLabel.setTextFill(Color.BLACK);
         Label nameValue = new Label(patientName);
-        Label ageLabel = new Label("Age:");
-        Label ageValue = new Label(String.valueOf(currentpatient.getAge()));
-        Label addressLabel = new Label("Address:");
-        Label addressValue = new Label(currentpatient.getAddress());
+        nameValue.setTextFill(Color.BLACK);
 
-        detailsGrid.add(new Label("Name:"), 0, 0);
+        Label ageLabel = new Label("Age:");
+        ageLabel.setTextFill(Color.BLACK);
+        Label ageValue = new Label(String.valueOf(currentpatient.getAge()));
+        ageValue.setTextFill(Color.BLACK);
+
+        Label addressLabel = new Label("Address:");
+        addressLabel.setTextFill(Color.BLACK);
+        Label addressValue = new Label(currentpatient.getAddress());
+        addressValue.setTextFill(Color.BLACK);
+
+        detailsGrid.add(nameLabel, 0, 0);
         detailsGrid.add(nameValue, 1, 0);
-        detailsGrid.add(new Label("Age:"), 0, 1);
+        detailsGrid.add(ageLabel, 0, 1);
         detailsGrid.add(ageValue, 1, 1);
-        detailsGrid.add(new Label("Address:"), 0, 2);
+        detailsGrid.add(addressLabel, 0, 2);
         detailsGrid.add(addressValue, 1, 2);
 
         // Edit Profile Section
@@ -80,6 +105,7 @@ public class PatientProfileView extends VBox {
         editProfileBox.setAlignment(Pos.CENTER);
 
         Button editButton = new Button("Edit Profile");
+        editButton.setStyle("-fx-background-color: #FF9800; -fx-text-fill: white;");
         editButton.setOnAction(event -> {
             // Show a dialog to edit profile
             Dialog<ButtonType> dialog = new Dialog<>();
@@ -96,12 +122,17 @@ public class PatientProfileView extends VBox {
             dialog.setResultConverter(dialogButton -> {
                 if (dialogButton == ButtonType.OK) {
                     // Update patient attributes
-                    updatePatient(patientName, currentpatient.getPassword(), "name", nameField.getText());
-                    updatePatient(patientName, currentpatient.getPassword(), "age", Integer.parseInt(ageField.getText()));
-                    updatePatient(patientName, currentpatient.getPassword(), "address", addressField.getText());
-                    nameValue.setText(nameField.getText());
+                    String name = nameField.getText();
+                    float age = Float.parseFloat(ageField.getText());
+                    String address = addressField.getText();
+                    updatePatient(currentpatient.getUsername(), currentpatient.getPassword(), "username", name);
+                    updatePatient(currentpatient.getUsername(), currentpatient.getPassword(), "age", age);
+                    updatePatient(currentpatient.getUsername(), currentpatient.getPassword(), "address", address);
+
+                    nameValue.setText(name);
                     ageValue.setText(ageField.getText());
-                    addressValue.setText(addressField.getText());
+                    addressValue.setText(address);
+                    showAlert("Success", "Profile updated successfully!");
                 }
                 return dialogButton;
             });
@@ -109,13 +140,14 @@ public class PatientProfileView extends VBox {
         });
 
         Button deleteButton = new Button("Delete Account");
+        deleteButton.setStyle("-fx-background-color: #F44336; -fx-text-fill: white;");
         deleteButton.setOnAction(event -> {
             // Confirm deletion
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete your account?", ButtonType.YES, ButtonType.NO);
             alert.initOwner(mainApp.getPrimaryStage());
             alert.showAndWait().ifPresent(response -> {
                 if (response == ButtonType.YES) {
-                    Patient_Service.getInstance().RemovePatient(patientName);
+                    Patient_Service.getInstance().RemovePatient(currentpatient.getUsername());
                     mainApp.loadPage("Entry" , null);
                 }
             });
@@ -128,25 +160,30 @@ public class PatientProfileView extends VBox {
         balanceBox.setAlignment(Pos.CENTER);
 
         Button balanceButton = new Button("View Balance");
+        balanceButton.setStyle("-fx-background-color: #9C27B0; -fx-text-fill: white;");
         balanceButton.setOnAction(event -> {
             // Show balance
-            double balance = Patient_Service.getInstance().GetPatientBalance(patientName);
+            double balance = Patient_Service.getInstance().GetPatientBalance(currentpatient.getUsername());
             showAlert("Balance", "Your balance is: $" + balance);
         });
 
         balanceBox.getChildren().add(balanceButton);
 
-        // Orders Section
+        // Orders Section with enhanced visibility
         Label ordersLabel = new Label("Successfully Paid Orders");
         ordersLabel.setFont(new Font("Arial", 16));
-        ordersLabel.setTextFill(Color.DARKRED);
+        ordersLabel.setTextFill(Color.WHITE);
+        ordersLabel.setStyle("-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 5, 0, 0, 0);");
 
         ListView<Order> paidOrdersListView = new ListView<>();
         paidOrdersListView.setPrefHeight(150);
+        // Make list view background slightly transparent to fit with theme
+        paidOrdersListView.setStyle("-fx-background-color: rgba(255, 255, 255, 0.8);");
 
         Button viewPaidOrdersButton = new Button("View Paid Orders");
+        viewPaidOrdersButton.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white;");
         viewPaidOrdersButton.setOnAction(event -> {
-            List<Order> paidOrders = fetchPaidOrders(patientName);
+            List<Order> paidOrders = fetchPaidOrders(currentpatient.getUsername());
             if(paidOrders == null || paidOrders.isEmpty()) {
                 showAlert("Error", "No Paid orders found.");
                 paidOrders = new ArrayList<>();
@@ -155,17 +192,21 @@ public class PatientProfileView extends VBox {
             paidOrdersListView.setItems(paidOrdersObservableList);
         });
 
-        // Order Status Section
+        // Order Status Section with enhanced visibility
         Label orderStatusLabel = new Label("Order Status");
         orderStatusLabel.setFont(new Font("Arial", 16));
-        orderStatusLabel.setTextFill(Color.DARKRED);
+        orderStatusLabel.setTextFill(Color.WHITE);
+        orderStatusLabel.setStyle("-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 5, 0, 0, 0);");
 
         ListView<String> orderStatusListView = new ListView<>();
         orderStatusListView.setPrefHeight(150);
+        // Make list view background slightly transparent to fit with theme
+        orderStatusListView.setStyle("-fx-background-color: rgba(255, 255, 255, 0.8);");
 
         Button viewOrderStatusButton = new Button("View Order Status");
+        viewOrderStatusButton.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white;");
         viewOrderStatusButton.setOnAction(event -> {
-            List<Order> paidOrders = Order_Service.getInstance().GetByCustomer(patientName);
+            List<Order> paidOrders = Order_Service.getInstance().GetByCustomer(currentpatient.getUsername());
             if(paidOrders == null|| paidOrders.isEmpty()) {
                 showAlert("Error", "No orders found.");
                 paidOrders = new ArrayList<>();
@@ -178,6 +219,7 @@ public class PatientProfileView extends VBox {
 
         // Back Button
         Button backButton = new Button("Back");
+        backButton.setStyle("-fx-background-color: #607D8B; -fx-text-fill: white;");
         backButton.setOnAction(event -> mainApp.loadPage("Entry" , null));
 
         // payment button
@@ -187,13 +229,12 @@ public class PatientProfileView extends VBox {
 
         Button paymentButton = new Button("Proceed to Payment");
         paymentButton.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-size: 16px; -fx-padding: 10px 20px;");
-        paymentButton.setOnAction(event -> mainApp.loadPage("Payment", patientName));
+        paymentButton.setOnAction(event -> mainApp.loadPage("Payment", currentpatient.getUsername()));
 
         paymentButtonBox.getChildren().add(paymentButton);
 
         // Organize components into the main VBox
         this.getChildren().addAll(titleLabel, placeOrderBox, detailsGrid, editProfileBox, balanceBox, ordersLabel, paidOrdersListView, viewPaidOrdersButton, orderStatusLabel, orderStatusListView, viewOrderStatusButton, paymentButtonBox, backButton);
-
     }
 
     private void updatePatient(String patientName, String password, String query, Object value) {
@@ -225,4 +266,3 @@ public class PatientProfileView extends VBox {
         });
     }
 }
-

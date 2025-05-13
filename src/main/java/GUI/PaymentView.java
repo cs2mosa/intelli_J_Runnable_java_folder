@@ -10,6 +10,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 import java.util.List;
 
@@ -25,6 +27,44 @@ public class PaymentView extends VBox {
         this.patientName = patientName;
         this.setSpacing(20);
         this.setPadding(new Insets(20));
+
+        // Set up background image
+        try {
+            // Load the background image - update the path to where your image is stored
+            Image backgroundImage = new Image(getClass().getResourceAsStream("/images/payment_background.jpg"));
+
+            // Create ImageView with the background image
+            ImageView backgroundImageView = new ImageView(backgroundImage);
+
+            // Make the background image resize with the window
+            backgroundImageView.fitWidthProperty().bind(this.widthProperty());
+            backgroundImageView.fitHeightProperty().bind(this.heightProperty());
+            backgroundImageView.setPreserveRatio(false);
+
+            // Set the background
+            this.setBackground(new Background(new BackgroundImage(
+                    backgroundImage,
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundPosition.CENTER,
+                    new BackgroundSize(1.0, 1.0, true, true, false, false)
+            )));
+        } catch (Exception e) {
+            System.err.println("Error loading background image: " + e.getMessage());
+        }
+
+        // Create a main container to hold all elements
+        VBox contentBox = new VBox();
+        contentBox.setSpacing(20);
+        contentBox.setPadding(new Insets(20));
+        contentBox.setAlignment(Pos.TOP_CENTER);
+
+        // Make the content box transparent to show the background
+        contentBox.setBackground(new Background(new BackgroundFill(
+                Color.rgb(255, 255, 255, 0.3), // Semi-transparent white background for better readability
+                new CornerRadii(10),
+                Insets.EMPTY
+        )));
 
         // Title
         Label titleLabel = new Label("Payment");
@@ -99,13 +139,23 @@ public class PaymentView extends VBox {
             }
         });
 
-        // Organize components into the main VBox
-        this.getChildren().addAll(titleLabel, orderDetailsLabel, orderPriceLabel, patientBalanceLabel, paymentDetailsLabel, paymentAmountField, paymentMethodComboBox, payButton, backButton);
+        // Improve button styling for better visibility on background
+        backButton.setStyle("-fx-background-color: #f0f0f0; -fx-text-fill: #333333; -fx-font-weight: bold;");
+        payButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;");
+
+        // Add all controls to the content box
+        contentBox.getChildren().addAll(titleLabel, orderDetailsLabel, orderPriceLabel, patientBalanceLabel,
+                paymentDetailsLabel, paymentAmountField, paymentMethodComboBox,
+                payButton, backButton);
+
+        // Add the content box to the main VBox
+        this.getChildren().add(contentBox);
     }
 
     private Order fetchCurrentOrder(String patientName) {
         // Implement fetching the current order using OrderService
         List<Order> orders = Order_Service.getInstance().GetByCustomer(patientName);
+        if(orders == null || orders.isEmpty()) return null;
         //need sorting orders first
         for(Order order : orders){
             if(order.getStatus().equals("Pending")){

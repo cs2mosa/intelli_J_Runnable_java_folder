@@ -9,6 +9,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -23,11 +25,47 @@ public class PatientSignupView extends VBox {
         this.setSpacing(20);
         this.setPadding(new Insets(20));
 
+        // Set background image
+        try {
+            // Load the pills image from your resources directory
+            // Adjust the path as needed based on your project structure
+            Image backgroundImage = new Image(getClass().getResourceAsStream("/images/pack.jpg"));
+
+            // Create a BackgroundImage object
+            BackgroundImage background = new BackgroundImage(
+                    backgroundImage,
+                    BackgroundRepeat.NO_REPEAT,  // Don't repeat the image
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundPosition.CENTER,   // Center the image
+                    new BackgroundSize(
+                            BackgroundSize.AUTO,  // Auto width
+                            BackgroundSize.AUTO,  // Auto height
+                            false,               // Don't preserve ratio
+                            false,               // Don't preserve ratio
+                            true,                // Cover the entire area
+                            true                 // Cover the entire area
+                    )
+            );
+
+            // Apply the background to the VBox
+            this.setBackground(new Background(background));
+        } catch (Exception e) {
+            System.err.println("Failed to load background image: " + e.getMessage());
+        }
+
         // Title
         Label titleLabel = new Label("Patient Sign Up");
         titleLabel.setFont(new Font("Arial", 24));
-        titleLabel.setTextFill(Color.DARKBLUE);
+        titleLabel.setTextFill(Color.WHITE); // Changed to white for better visibility on the image
         titleLabel.setAlignment(Pos.CENTER);
+
+        // Add a small pane behind text elements for better readability
+        VBox contentBox = new VBox();
+        contentBox.setSpacing(20);
+        contentBox.setPadding(new Insets(15));
+        contentBox.setStyle("-fx-background-color: rgba(255, 255, 255, 0.3);"); // Semi-transparent white background
+        contentBox.setMaxWidth(400);
+        contentBox.setAlignment(Pos.CENTER);
 
         // Username Section
         Label usernameLabel = new Label("Username:");
@@ -93,8 +131,25 @@ public class PatientSignupView extends VBox {
         Button backButton = new Button("Back");
         backButton.setOnAction(event -> mainApp.loadPage("Entry" , null));
 
-        // Organize components into the main VBox
-        this.getChildren().addAll(titleLabel, usernameLabel, usernameField, passwordLabel, passwordField, emailLabel, emailField, phoneLabel, phoneField, ageLabel, ageField, addressLabel, addressField, signupButton, backButton);
+        // Style buttons for better visibility on background
+        String buttonStyle = "-fx-background-color: #336699; -fx-text-fill: white; -fx-font-weight: bold;";
+        signupButton.setStyle(buttonStyle);
+        backButton.setStyle(buttonStyle);
+
+        // Add content to the semi-transparent box
+        contentBox.getChildren().addAll(
+                usernameLabel, usernameField,
+                passwordLabel, passwordField,
+                emailLabel, emailField,
+                phoneLabel, phoneField,
+                ageLabel, ageField,
+                addressLabel, addressField,
+                signupButton, backButton
+        );
+
+        // Organize components into the main VBox (just title and content box)
+        this.setAlignment(Pos.CENTER);
+        this.getChildren().addAll(titleLabel, contentBox);
     }
 
     private int signUpPatient(String username, String password, String email, String phone, float age, String address) {

@@ -207,6 +207,12 @@ public class Patient_Service implements PatientServiceInterface {
             throw new IllegalArgumentException("invalid value type.");//status code of invalid value type.
         try {
             switch (query) {
+                case "username":
+                    if (value instanceof String) {
+                        temp.setUsername((String) value);
+                        return Patient_Repository.getInstance().UpdatePatient(temp.getID(), temp);
+                    }
+                    throw new IllegalArgumentException("invalid value type.");
                 case "age":
                     if (value instanceof Float) {
                         temp.setAge((Float) value);

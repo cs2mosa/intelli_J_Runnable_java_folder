@@ -12,6 +12,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.util.StringConverter;
 
 import java.util.*;
@@ -26,16 +28,54 @@ public class OrderView extends VBox {
         this.setSpacing(20);
         this.setPadding(new Insets(20));
 
+        // Set up background image
+        try {
+            // Load the background image - update the path to where your image is stored
+            Image backgroundImage = new Image(getClass().getResourceAsStream("/images/pack.jpg"));
+
+            // Create ImageView with the background image
+            ImageView backgroundImageView = new ImageView(backgroundImage);
+
+            // Make the background image resize with the window
+            backgroundImageView.fitWidthProperty().bind(this.widthProperty());
+            backgroundImageView.fitHeightProperty().bind(this.heightProperty());
+            backgroundImageView.setPreserveRatio(false);
+
+            // Set the background
+            this.setBackground(new Background(new BackgroundImage(
+                    backgroundImage,
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundPosition.CENTER,
+                    new BackgroundSize(1.0, 1.0, true, true, false, false)
+            )));
+        } catch (Exception e) {
+            System.err.println("Error loading background image: " + e.getMessage());
+        }
+
+        // Create a main container to hold all elements
+        VBox contentBox = new VBox();
+        contentBox.setSpacing(20);
+        contentBox.setPadding(new Insets(20));
+        contentBox.setAlignment(Pos.TOP_CENTER);
+
+        // Make the content box transparent to show the background
+        contentBox.setBackground(new Background(new BackgroundFill(
+                Color.rgb(255, 255, 255, 0.3), // Semi-transparent white background for better readability
+                new CornerRadii(10),
+                Insets.EMPTY
+        )));
+
         // Title
         Label titleLabel = new Label("Place Order");
         titleLabel.setFont(new Font("Arial", 24));
-        titleLabel.setTextFill(Color.DARKBLUE);
+        titleLabel.setTextFill(Color.WHITE);
         titleLabel.setAlignment(Pos.CENTER);
 
         // Search Section
         Label searchLabel = new Label("Search Items");
         searchLabel.setFont(new Font("Arial", 16));
-        searchLabel.setTextFill(Color.DARKRED);
+        searchLabel.setTextFill(Color.GHOSTWHITE);
 
         ListView<Item> itemsListView = new ListView<>();
         itemsListView.setPrefHeight(200);
@@ -59,7 +99,7 @@ public class OrderView extends VBox {
         // Available Items Section
         Label itemsLabel = new Label("Available Items");
         itemsLabel.setFont(new Font("Arial", 16));
-        itemsLabel.setTextFill(Color.DARKRED);
+        itemsLabel.setTextFill(Color.GHOSTWHITE);
 
         // Fetch available items
         List<Item> availableItems = Inventory_service.getInstance().GetAllItems();
@@ -70,7 +110,7 @@ public class OrderView extends VBox {
         // Order Details Section
         Label orderDetailsLabel = new Label("Order Details");
         orderDetailsLabel.setFont(new Font("Arial", 16));
-        orderDetailsLabel.setTextFill(Color.DARKRED);
+        orderDetailsLabel.setTextFill(Color.GHOSTWHITE);
 
         // Map to store item quantities
         Map<String, Integer> orderItems = new HashMap<>();
@@ -135,8 +175,15 @@ public class OrderView extends VBox {
             }
         });
 
-        // Organize components into the main VBox
-        this.getChildren().addAll(titleLabel, searchLabel, searchBox, itemsLabel, itemsListView, orderDetailsLabel, addItemButton, placeOrderButton);
+        // Improve button styling for better visibility on background
+        addItemButton.setStyle("-fx-background-color: #f0f0f0; -fx-text-fill: #333333; -fx-font-weight: bold;");
+        placeOrderButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;");
+
+        // Add all controls to the content box
+        contentBox.getChildren().addAll(titleLabel, searchLabel, searchBox, itemsLabel, itemsListView, orderDetailsLabel, addItemButton, placeOrderButton);
+
+        // Add the content box to the main VBox
+        this.getChildren().add(contentBox);
     }
 
     private List<Item> searchItems(String query) {
@@ -182,7 +229,3 @@ public class OrderView extends VBox {
         });
     }
 }
-/*private List<Item> fetchAvailableItems() {
-        // Implement fetching available items using InventoryService
-        return Inventory_service.getInstance().GetAllItems();            //we need to implement GetAllItems in inventory_service
-    }*/

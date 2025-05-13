@@ -10,6 +10,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.image.Image;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 
 public class PharmacistProfileView extends VBox {
 
@@ -21,14 +27,50 @@ public class PharmacistProfileView extends VBox {
         this.setSpacing(20);
         this.setPadding(new Insets(20));
         this.setAlignment(Pos.CENTER);
+
+        // Set background image
+        try {
+            // Load the pills image from your resources directory
+            Image backgroundImage = new Image(getClass().getResourceAsStream("/images/pack.jpg"));
+
+            // Create a BackgroundImage object
+            BackgroundImage background = new BackgroundImage(
+                    backgroundImage,
+                    BackgroundRepeat.NO_REPEAT,  // Don't repeat the image
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundPosition.CENTER,   // Center the image
+                    new BackgroundSize(
+                            BackgroundSize.AUTO,  // Auto width
+                            BackgroundSize.AUTO,  // Auto height
+                            false,               // Don't preserve ratio
+                            false,               // Don't preserve ratio
+                            true,                // Cover the entire area
+                            true                 // Cover the entire area
+                    )
+            );
+
+            // Apply the background to the VBox
+            this.setBackground(new Background(background));
+        } catch (Exception e) {
+            System.err.println("Failed to load background image: " + e.getMessage());
+        }
+
         // Retrieve current pharmacist
         this.pharmacist = (Pharmacist) User_Service.getInstance().GetByUsername(pharmacistUsername);
 
-        // Title
+        // Title with enhanced visibility
         Label titleLabel = new Label("Pharmacist Profile");
         titleLabel.setFont(new Font("Arial", 24));
-        titleLabel.setTextFill(Color.DARKBLUE);
+        titleLabel.setTextFill(Color.WHITE);
+        titleLabel.setStyle("-fx-background-color: rgba(0, 0, 128, 0.3); -fx-padding: 10px 30px; -fx-background-radius: 5px;");
         titleLabel.setAlignment(Pos.CENTER);
+
+        // Create semi-transparent container for profile details
+        VBox contentContainer = new VBox(20);
+        contentContainer.setAlignment(Pos.CENTER);
+        contentContainer.setPadding(new Insets(20));
+        contentContainer.setStyle("-fx-background-color: rgba(255, 255, 255, 0.3); -fx-background-radius: 10px;");
+        contentContainer.setMaxWidth(500);
 
         // Pharmacist Details Section
         GridPane detailsGrid = new GridPane();
@@ -69,19 +111,19 @@ public class PharmacistProfileView extends VBox {
         detailsGrid.add(salaryLabel, 0, 3);
         detailsGrid.add(salaryValue, 1, 3);
 
-        // Buttons Section
+        // Buttons Section - preserving all original functionality
         HBox buttonsBox = new HBox(10);
         buttonsBox.setAlignment(Pos.CENTER);
 
         Button receivedOrdersButton = new Button("Received Orders");
         receivedOrdersButton.setFont(new Font("Arial", 16));
         receivedOrdersButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
-        receivedOrdersButton.setOnAction(event -> mainApp.loadPage("ReceivedOrders" , pharmacistUsername));
+        receivedOrdersButton.setOnAction(event -> mainApp.loadPage("ReceivedOrders", pharmacistUsername));
 
         Button inventoryButton = new Button("Inventory");
         inventoryButton.setFont(new Font("Arial", 16));
         inventoryButton.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white;");
-        inventoryButton.setOnAction(event -> mainApp.loadPage("Inventory" , pharmacistUsername));
+        inventoryButton.setOnAction(event -> mainApp.loadPage("Inventory", pharmacistUsername));
 
         Button editProfileButton = new Button("Edit Profile");
         editProfileButton.setFont(new Font("Arial", 16));
@@ -91,11 +133,18 @@ public class PharmacistProfileView extends VBox {
         Button logoutButton = new Button("Logout");
         logoutButton.setFont(new Font("Arial", 16));
         logoutButton.setStyle("-fx-background-color: #F44336; -fx-text-fill: white;");
-        logoutButton.setOnAction(event -> mainApp.loadPage("Entry" , null));
+        logoutButton.setOnAction(event -> mainApp.loadPage("Entry", null));
 
         buttonsBox.getChildren().addAll(receivedOrdersButton, inventoryButton, editProfileButton, logoutButton);
 
-        this.getChildren().addAll(titleLabel, detailsGrid, buttonsBox);
+        // Add components to the content container
+        contentContainer.getChildren().addAll(detailsGrid, buttonsBox);
+
+        // Add spacing to push content down from title
+        this.setSpacing(30);
+
+        // Add components to main VBox
+        this.getChildren().addAll(titleLabel, contentContainer);
     }
 
     private String getCurrentPharmacistUsername() {
@@ -138,7 +187,7 @@ public class PharmacistProfileView extends VBox {
                 User_Service.getInstance().UpdateUser(pharmacist.getUsername(), "email", emailField.getText());
                 User_Service.getInstance().UpdateUser(pharmacist.getUsername(), "phone", phoneField.getText());
                 showAlert("Success", "Profile updated successfully");
-                mainApp.loadPage("PharmacistProfile" , pharmacist.getUsername());
+                mainApp.loadPage("PharmacistProfile", pharmacist.getUsername());
             }
             return dialogButton;
         });

@@ -7,6 +7,12 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.image.Image;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 
 public class EntryView extends VBox {
 
@@ -18,10 +24,26 @@ public class EntryView extends VBox {
         this.setPadding(new Insets(20));
         this.setAlignment(Pos.CENTER);
 
-        // Title
+        // Set background image
+        try {
+            Image backgroundImage = new Image(getClass().getResourceAsStream("/images/pharmacy_background.jpg"));
+            BackgroundImage background = new BackgroundImage(
+                    backgroundImage,
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundPosition.CENTER,
+                    new BackgroundSize(100, 100, true, true, true, true)
+            );
+            this.setBackground(new Background(background));
+        } catch (Exception e) {
+            System.err.println("Could not load background image: " + e.getMessage());
+        }
+
+        // Title with enhanced visibility against background
         Label titleLabel = new Label("Pharmacy Management System");
         titleLabel.setFont(new Font("Arial", 24));
-        titleLabel.setTextFill(Color.DARKBLUE);
+        titleLabel.setTextFill(Color.WHITE);
+        titleLabel.setStyle("-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);");
         titleLabel.setAlignment(Pos.CENTER);
 
         // Patient Button
