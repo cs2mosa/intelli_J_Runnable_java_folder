@@ -61,7 +61,7 @@ public class PaymentView extends VBox {
 
         // Make the content box transparent to show the background
         contentBox.setBackground(new Background(new BackgroundFill(
-                Color.rgb(255, 255, 255, 0.3), // Semi-transparent white background for better readability
+                Color.rgb(255, 255, 255, 0.5), // Semi-transparent white background for better readability
                 new CornerRadii(10),
                 Insets.EMPTY
         )));

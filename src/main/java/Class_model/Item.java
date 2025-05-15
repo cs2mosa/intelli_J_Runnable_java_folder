@@ -16,7 +16,7 @@ import java.util.Set;
 /**
  * Represents an item with details such as name, category, price, quantity, and effects.
  */
-public class Item {
+public class Item implements Comparable<Item> {
     // The quantity of the item in stock.
     private int quantity;
 
@@ -219,6 +219,15 @@ public class Item {
      */
     public void setHealingEffects(Set<String> healing_effects) {
         this.healing_effects = healing_effects;
+    }
+
+    /**
+     * Sets the category of the item.
+     * @param item The category of the item.
+     */
+    @Override
+    public int compareTo(Item item) {
+        return this.medic_name.compareTo(item.medic_name);
     }
 
     @Override

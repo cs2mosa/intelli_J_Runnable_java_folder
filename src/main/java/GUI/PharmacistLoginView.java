@@ -65,7 +65,7 @@ public class PharmacistLoginView extends VBox {
         VBox formContainer = new VBox();
         formContainer.setSpacing(15);
         formContainer.setPadding(new Insets(20));
-        formContainer.setStyle("-fx-background-color: rgba(255, 255, 255, 0.3); -fx-background-radius: 10px;");
+        formContainer.setStyle("-fx-background-color: rgba(255, 255, 255, 0.5); -fx-background-radius: 10px;");
         formContainer.setMaxWidth(350);
         formContainer.setAlignment(Pos.CENTER);
 

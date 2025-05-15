@@ -62,14 +62,14 @@ public class PharmacistProfileView extends VBox {
         Label titleLabel = new Label("Pharmacist Profile");
         titleLabel.setFont(new Font("Arial", 24));
         titleLabel.setTextFill(Color.WHITE);
-        titleLabel.setStyle("-fx-background-color: rgba(0, 0, 128, 0.3); -fx-padding: 10px 30px; -fx-background-radius: 5px;");
+        titleLabel.setStyle("-fx-background-color: rgba(0, 0, 128, 0.5); -fx-padding: 10px 30px; -fx-background-radius: 5px;");
         titleLabel.setAlignment(Pos.CENTER);
 
         // Create semi-transparent container for profile details
         VBox contentContainer = new VBox(20);
         contentContainer.setAlignment(Pos.CENTER);
         contentContainer.setPadding(new Insets(20));
-        contentContainer.setStyle("-fx-background-color: rgba(255, 255, 255, 0.3); -fx-background-radius: 10px;");
+        contentContainer.setStyle("-fx-background-color: rgba(255, 255, 255, 0.5); -fx-background-radius: 10px;");
         contentContainer.setMaxWidth(500);
 
         // Pharmacist Details Section

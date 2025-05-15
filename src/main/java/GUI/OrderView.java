@@ -61,7 +61,7 @@ public class OrderView extends VBox {
 
         // Make the content box transparent to show the background
         contentBox.setBackground(new Background(new BackgroundFill(
-                Color.rgb(255, 255, 255, 0.3), // Semi-transparent white background for better readability
+                Color.rgb(255, 255, 255, 0.5), // Semi-transparent white background for better readability
                 new CornerRadii(10),
                 Insets.EMPTY
         )));
@@ -104,6 +104,8 @@ public class OrderView extends VBox {
         // Fetch available items
         List<Item> availableItems = Inventory_service.getInstance().GetAllItems();
         if(availableItems == null || availableItems.isEmpty()) showAlert("Error", "No items found.");
+        assert availableItems != null;
+        Collections.sort(availableItems);
         ObservableList<Item> itemsObservableList = FXCollections.observableArrayList(availableItems);
         itemsListView.setItems(itemsObservableList);
 
@@ -199,9 +201,8 @@ public class OrderView extends VBox {
     }
 
     private void updateItemsListView(ListView<Item> itemsListView,List<Item> items) {
+        Collections.sort(items);
         ObservableList<Item> itemsObservableList = FXCollections.observableArrayList(items);
-        //@SuppressWarnings("unchecked")//suppressed that warning because it doesn't matter for now.
-        //ListView<Item> itemsListView = (ListView<Item>) this.lookup("#itemsListView");
         if (!itemsObservableList.isEmpty()) {
             itemsListView.setItems(itemsObservableList);
         } else {

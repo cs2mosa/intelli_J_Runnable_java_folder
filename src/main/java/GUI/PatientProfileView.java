@@ -72,7 +72,7 @@ public class PatientProfileView extends VBox {
         detailsGrid.setHgap(10);
         detailsGrid.setVgap(10);
         detailsGrid.setAlignment(Pos.CENTER);
-        detailsGrid.setStyle("-fx-background-color: rgba(255, 255, 255, 0.3); -fx-padding: 10px; -fx-background-radius: 5px;");
+        detailsGrid.setStyle("-fx-background-color: rgba(255, 255, 255, 0.5); -fx-padding: 10px; -fx-background-radius: 5px;");
 
         //current patient.
         Patient currentpatient = Patient_Service.getInstance().GetPatient(patientName);
@@ -178,7 +178,7 @@ public class PatientProfileView extends VBox {
         ListView<Order> paidOrdersListView = new ListView<>();
         paidOrdersListView.setPrefHeight(150);
         // Make list view background slightly transparent to fit with theme
-        paidOrdersListView.setStyle("-fx-background-color: rgba(255, 255, 255, 0.8);");
+        paidOrdersListView.setStyle("-fx-background-color: rgba(255, 255, 255, 0.5);");
 
         Button viewPaidOrdersButton = new Button("View Paid Orders");
         viewPaidOrdersButton.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white;");

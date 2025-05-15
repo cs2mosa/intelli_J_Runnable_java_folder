@@ -63,7 +63,7 @@ public class PatientSignupView extends VBox {
         VBox contentBox = new VBox();
         contentBox.setSpacing(20);
         contentBox.setPadding(new Insets(15));
-        contentBox.setStyle("-fx-background-color: rgba(255, 255, 255, 0.3);"); // Semi-transparent white background
+        contentBox.setStyle("-fx-background-color: rgba(255, 255, 255, 0.5);"); // Semi-transparent white background
         contentBox.setMaxWidth(400);
         contentBox.setAlignment(Pos.CENTER);
 

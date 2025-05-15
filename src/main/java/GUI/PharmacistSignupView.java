@@ -58,7 +58,7 @@ public class PharmacistSignupView extends VBox {
         // Create a container for the signup form with semi-transparent background
         VBox formContainer = new VBox(15);
         formContainer.setPadding(new Insets(20));
-        formContainer.setStyle("-fx-background-color: rgba(255, 255, 255, 0.3); -fx-background-radius: 10;");
+        formContainer.setStyle("-fx-background-color: rgba(255, 255, 255, 0.5); -fx-background-radius: 10;");
         formContainer.setMaxWidth(500);
         formContainer.setAlignment(Pos.CENTER);
 

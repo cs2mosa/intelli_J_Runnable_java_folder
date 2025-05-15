@@ -43,7 +43,7 @@ public class PatientLoginView extends VBox {
         // Create a container for the login form with semi-transparent background
         VBox loginFormContainer = new VBox(10);
         loginFormContainer.setPadding(new Insets(20));
-        loginFormContainer.setStyle("-fx-background-color: rgba(255, 255, 255, 0.3); -fx-background-radius: 10;");
+        loginFormContainer.setStyle("-fx-background-color: rgba(255, 255, 255, 0.5); -fx-background-radius: 10;");
         loginFormContainer.setMaxWidth(400);
         loginFormContainer.setAlignment(Pos.CENTER);
 
