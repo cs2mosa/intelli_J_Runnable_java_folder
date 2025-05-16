@@ -98,15 +98,19 @@ public class PharmacistLoginView extends VBox {
         loginButton.setFont(new Font("Arial", 16));
         loginButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
         loginButton.setOnAction(event -> {
-            String username = usernameField.getText();
-            String password = passwordField.getText();
+            try{
+                String username = usernameField.getText();
+                String password = passwordField.getText();
 
-            Pharmacist pharmacist = (Pharmacist) User_Service.getInstance().GetByUsername(username);
-            /*pharmacist != null && pharmacist.getPassword().equals(password) && pharmacist.getPassword() != null*/
-            if (User_Service.getInstance().AuthenticateUser(pharmacist)) {
-                showAlert("Success", "Login successful!");
-                mainApp.loadPage("PharmacistProfile" , username);
-            } else {
+                Pharmacist pharmacist = (Pharmacist) User_Service.getInstance().GetByUsername(username);
+                /*pharmacist != null && pharmacist.getPassword().equals(password) && pharmacist.getPassword() != null*/
+                if (User_Service.getInstance().AuthenticateUser(pharmacist)) {
+                    showAlert("Success", "Login successful!");
+                    mainApp.loadPage("PharmacistProfile" , username);
+                } else {
+                    showAlert("Error", "Invalid username or password");
+                }
+            } catch (Exception e) {
                 showAlert("Error", "Invalid username or password");
             }
         });

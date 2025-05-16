@@ -205,10 +205,15 @@ public class InventoryView extends VBox {
 
         Button viewLowStockButton = new Button("View Low Stock");
         viewLowStockButton.setOnAction(event -> {
-            List<String> lowStockItems = Inventory_service.getInstance().getLowStockItems();
-            if(lowStockItems == null || lowStockItems.isEmpty()) showAlert("Error", "No low stock items found.");
-            ObservableList<String> lowStockObservableList = FXCollections.observableArrayList(lowStockItems);
-            lowStockListView.setItems(lowStockObservableList);
+            try{
+                List<String> lowStockItems = Inventory_service.getInstance().getLowStockItems();
+                if(lowStockItems == null || lowStockItems.isEmpty()) showAlert("Error", "No low stock items found.");
+                ObservableList<String> lowStockObservableList = FXCollections.observableArrayList(lowStockItems);
+                lowStockListView.setItems(lowStockObservableList);
+
+            }catch (Exception e){
+                System.out.println("Error fetching low stock items: " + e.getMessage());
+            }
         });
 
         lowStockSection.getChildren().addAll(lowStockLabel, lowStockListView, viewLowStockButton);

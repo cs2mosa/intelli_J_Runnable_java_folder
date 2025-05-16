@@ -147,12 +147,6 @@ public class PharmacistProfileView extends VBox {
         this.getChildren().addAll(titleLabel, contentContainer);
     }
 
-    private String getCurrentPharmacistUsername() {
-        // Implement logic to retrieve current pharmacist's username
-        // This is a placeholder implementation
-        return "pharmacist_username";
-    }
-
     private void showEditProfileDialog() {
         // Create a dialog for editing profile information
         Dialog<ButtonType> dialog = new Dialog<>();
@@ -178,18 +172,23 @@ public class PharmacistProfileView extends VBox {
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
         dialog.setResultConverter(dialogButton -> {
-            if (dialogButton == ButtonType.OK) {
-                // Update pharmacist information
-                pharmacist.setUsername(nameField.getText());
-                pharmacist.setUserEmail(emailField.getText());
-                pharmacist.setPhoneNumber(phoneField.getText());
-                User_Service.getInstance().UpdateUser(pharmacist.getUsername(), "username", nameField.getText());
-                User_Service.getInstance().UpdateUser(pharmacist.getUsername(), "email", emailField.getText());
-                User_Service.getInstance().UpdateUser(pharmacist.getUsername(), "phone", phoneField.getText());
-                showAlert("Success", "Profile updated successfully");
-                mainApp.loadPage("PharmacistProfile", pharmacist.getUsername());
+            try{
+                if (dialogButton == ButtonType.OK) {
+                    // Update pharmacist information
+                    pharmacist.setUsername(nameField.getText());
+                    pharmacist.setUserEmail(emailField.getText());
+                    pharmacist.setPhoneNumber(phoneField.getText());
+                    User_Service.getInstance().UpdateUser(pharmacist.getUsername(), "username", nameField.getText());
+                    User_Service.getInstance().UpdateUser(pharmacist.getUsername(), "email", emailField.getText());
+                    User_Service.getInstance().UpdateUser(pharmacist.getUsername(), "phone", phoneField.getText());
+                    showAlert("Success", "Profile updated successfully");
+                    mainApp.loadPage("PharmacistProfile", pharmacist.getUsername());
+                }
+                return dialogButton;
+            } catch (Exception e) {
+                showAlert("Error", "Failed to update profile. Please try again.");
+                return dialogButton;
             }
-            return dialogButton;
         });
 
         dialog.showAndWait();

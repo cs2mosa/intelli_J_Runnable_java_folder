@@ -222,7 +222,7 @@ public class Item implements Comparable<Item> {
     }
 
     /**
-     * Sets the category of the item.
+     * implements comparable class for sorting
      * @param item The category of the item.
      */
     @Override

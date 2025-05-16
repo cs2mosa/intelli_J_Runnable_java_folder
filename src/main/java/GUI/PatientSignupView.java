@@ -112,17 +112,21 @@ public class PatientSignupView extends VBox {
         // Signup Button
         Button signupButton = new Button("Sign Up");
         signupButton.setOnAction(event -> {
-            String username = usernameField.getText();
-            String password = passwordField.getText();
-            String email = emailField.getText();
-            String phone = phoneField.getText();
-            float age = Float.parseFloat(ageField.getText());
-            String address = addressField.getText();
-            /*signUpPatient(username, password, email, phone, age, address)*/
-            if (signUpPatient(username, password, email, phone, age, address) > 0) {
-                showAlert("Success", "Sign up successful. Please log in.");
-                mainApp.loadPage("PatientProfile" , username);
-            } else {
+            try {
+                String username = usernameField.getText();
+                String password = passwordField.getText();
+                String email = emailField.getText();
+                String phone = phoneField.getText();
+                float age = Float.parseFloat(ageField.getText());
+                String address = addressField.getText();
+                /*signUpPatient(username, password, email, phone, age, address)*/
+                if (signUpPatient(username, password, email, phone, age, address) > 0) {
+                    showAlert("Success", "Sign up successful. Please log in.");
+                    mainApp.loadPage("PatientProfile" , username);
+                } else {
+                    showAlert("Error", "Sign up failed. Please try again.");
+                }
+            }catch (Exception e){
                 showAlert("Error", "Sign up failed. Please try again.");
             }
         });

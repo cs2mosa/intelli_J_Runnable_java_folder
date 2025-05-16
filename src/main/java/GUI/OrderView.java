@@ -66,6 +66,11 @@ public class OrderView extends VBox {
                 Insets.EMPTY
         )));
 
+        // Back Button
+        Button backButton = new Button("Back");
+        backButton.setStyle("-fx-background-color: #607D8B; -fx-text-fill: white;");
+        backButton.setOnAction(event -> mainApp.loadPage("PatientProfile" , patientName));
+
         // Title
         Label titleLabel = new Label("Place Order");
         titleLabel.setFont(new Font("Arial", 24));
@@ -137,6 +142,7 @@ public class OrderView extends VBox {
                                 quantity += orderItems.get(selectedItem);
                             orderItems.put(selectedItem, quantity);
                             showAlert("Success", "Item added to order.");
+                            if(selected.getQuantity() ==  quantity) availableItems.remove(selected);
                             updateItemsListView(itemsListView,availableItems);
                         }else if(quantity <= selected.getQuantity()) {
                             showAlert("Error", "no sufficient quantity");
@@ -182,7 +188,7 @@ public class OrderView extends VBox {
         placeOrderButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;");
 
         // Add all controls to the content box
-        contentBox.getChildren().addAll(titleLabel, searchLabel, searchBox, itemsLabel, itemsListView, orderDetailsLabel, addItemButton, placeOrderButton);
+        contentBox.getChildren().addAll(titleLabel, searchLabel, searchBox, itemsLabel, itemsListView, orderDetailsLabel, addItemButton, placeOrderButton, backButton);
 
         // Add the content box to the main VBox
         this.getChildren().add(contentBox);

@@ -12,6 +12,7 @@ import Class_model.Pharmacist;
 import Class_model.Prescription;
 import Class_model.Item;
 import Class_model.Order;
+import GUI.Date;
 
 /**
  * This interface defines the contract for patient-related services.
@@ -305,6 +306,7 @@ public class Patient_Service implements PatientServiceInterface {
                     .setOrderItems(new ArrayList<>(temp1.getItems()))
                     .setOrderId(new Random().nextInt(50000))
                     .setStatus("Pending")
+                    .setOrderDate(Date.getCurrentDateAsString())
                     .build();
             /* should be tested*/
             for(Item item : order.getOrderItems()) {
@@ -355,6 +357,7 @@ public class Patient_Service implements PatientServiceInterface {
                     .setStatus("Pending")
                     .setOrderItems(tempitems)
                     .setTotalPrice(totalprice)
+                    .setOrderDate(Date.getCurrentDateAsString())
                     .build();
 
             if (Order_Repository.getInstance().AddOrder(PatientId, order) > 0 && Prescription_Service.getInstance().IssuePrescription(pharmacist, PatientId, order.getOrderId()) > 0) {

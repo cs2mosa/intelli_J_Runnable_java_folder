@@ -185,7 +185,6 @@ public class PatientProfileView extends VBox {
         viewPaidOrdersButton.setOnAction(event -> {
             List<Order> paidOrders = fetchPaidOrders(currentpatient.getUsername());
             if(paidOrders == null || paidOrders.isEmpty()) {
-                showAlert("Error", "No Paid orders found.");
                 paidOrders = new ArrayList<>();
             }
             ObservableList<Order> paidOrdersObservableList = FXCollections.observableArrayList(paidOrders);
@@ -229,7 +228,14 @@ public class PatientProfileView extends VBox {
 
         Button paymentButton = new Button("Proceed to Payment");
         paymentButton.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-size: 16px; -fx-padding: 10px 20px;");
-        paymentButton.setOnAction(event -> mainApp.loadPage("Payment", currentpatient.getUsername()));
+        paymentButton.setOnAction(event -> {
+           List<Order> orders =  Order_Service.getInstance().GetByCustomer(currentpatient.getUsername());
+            if ( orders != null && !orders.isEmpty()) {
+                mainApp.loadPage("Payment", currentpatient.getUsername());
+            }else{
+                showAlert("Error", "No orders found.");
+            }
+        });
 
         paymentButtonBox.getChildren().add(paymentButton);
 
