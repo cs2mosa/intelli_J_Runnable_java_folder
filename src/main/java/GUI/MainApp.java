@@ -79,7 +79,7 @@ public class MainApp extends Application {
         return primaryStage;
     }
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         Item item1 = new Item.builder()
                 .setMedicName("Medic1")
                 .setPrice(10.0)
@@ -118,5 +118,5 @@ public class MainApp extends Application {
         Inventory_service.getInstance().AddNewItem(item3);
 
         launch(args);
-    }
+    }*/
 }
